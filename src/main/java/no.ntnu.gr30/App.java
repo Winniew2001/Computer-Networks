@@ -1,6 +1,8 @@
 package no.ntnu.gr30;
 
+import no.ntnu.gr30.mqtt.MqttCli;
 import no.ntnu.gr30.sensors.Sensor;
+import no.ntnu.gr30.providers.SensorProvider;
 
 public class App {
     private static final long SLEEP_DURATION_MS = 2000;
@@ -10,13 +12,20 @@ public class App {
     Sensor humiditySensor;
     Sensor temperatureSensor;
 
+    private boolean appRunning;
+    MqttCli mqttCli;
+
     public void run() throws IllegalStateException{
+        appRunning = true;
         initializeSensors();
-        while (true) {
+        mqttCli = MqttCli.instance;
+        mqttCli.connectToBroker();
+        while (appRunning) {
             readAllSensors();
             sendDataToServer();
             powerNap();
         }
+        mqttCli.disconnectFromBroker();
     }
 
     private void initializeSensors() throws IllegalStateException{
@@ -29,15 +38,16 @@ public class App {
     }
 
     private void readAllSensors(){
-        System.out.println("Reading sensor data...");
         lastHumidityReading = humiditySensor.readValue();
         lastTemperatureReading = temperatureSensor.readValue();
     }
 
     private void sendDataToServer() {
-        System.out.println("Sending data to server");
-        System.out.println(" humi: " + lastHumidityReading + "%");
-        System.out.println(" temp: " + lastTemperatureReading + "%");
+        try {
+            mqttCli.publish(lastHumidityReading, humiditySensor);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     private void powerNap(){
@@ -46,5 +56,9 @@ public class App {
         } catch (InterruptedException e){
             System.out.println("Woke from nap!!!!!!!");
         }
+    }
+
+    public void disableApp() {
+        appRunning = false;
     }
 }
