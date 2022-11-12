@@ -1,5 +1,8 @@
 package no.ntnu.gr30;
 
+/**
+ * Application entrypoint.
+ */
 public class Main {
     public static void main(String[] args) {
         System.out.println("Starting the application...");

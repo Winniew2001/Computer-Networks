@@ -4,6 +4,9 @@ import no.ntnu.gr30.sensors.HumiditySensor;
 import no.ntnu.gr30.sensors.Sensor;
 import no.ntnu.gr30.sensors.TemperatureSensor;
 
+/**
+ * Responsible for keeping track of all sensors.
+ */
 public class SensorProvider {
     private final HumiditySensor humiditySensor = new HumiditySensor("kitchen");
     private final TemperatureSensor temperatureSensor = new TemperatureSensor("bedroom");

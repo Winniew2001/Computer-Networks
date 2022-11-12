@@ -6,6 +6,9 @@ import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.UUID;
 
+/**
+ * Mqtt client responsible for interactions with the mqtt broker.
+ */
 public class MqttCli {
     private final static String TRANSPORT_PROTOCOL = "tcp";
     private final static String HOST_ADDRESS = "129.241.152.12";

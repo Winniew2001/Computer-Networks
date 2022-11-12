@@ -1,11 +1,14 @@
 package no.ntnu.gr30.sensors;
 import java.util.Random;
 
+/**
+ * Base class for sensors with maximum and minimum values.
+ * Used for simulation.
+ */
 public abstract class RangeRestrictedSensor implements Sensor{
     private final double min;
     private final double max;
     private double currentValue;
-
     private static final Random randomGenerator = new Random();
 
 

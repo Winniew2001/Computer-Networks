@@ -4,15 +4,18 @@ import no.ntnu.gr30.mqtt.MqttCli;
 import no.ntnu.gr30.sensors.Sensor;
 import no.ntnu.gr30.providers.SensorProvider;
 
+/**
+ * Represents our application.
+ */
 public class App {
     private static final long SLEEP_DURATION_MS = 2000;
+    private boolean appRunning;
     double lastHumidityReading;
     double lastTemperatureReading;
 
     Sensor humiditySensor;
     Sensor temperatureSensor;
 
-    private boolean appRunning;
     MqttCli mqttCli;
 
     public void run() throws IllegalStateException{

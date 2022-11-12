@@ -3,6 +3,9 @@ package no.ntnu.gr30.sensors;
 import no.ntnu.gr30.providers.IdProvider;
 import no.ntnu.gr30.utils.SensorType;
 
+/**
+ * Represents a temperature sensor.
+ */
 public class TemperatureSensor extends RangeRestrictedSensor {
     private static final double NORMAL_ROOM_TEMPERATURE = 25;
     private static final double MIN_ROOM_TEMPERATURE = 0;
