@@ -1,11 +1,14 @@
 <script>
-    import Temperature from "./Chart.svelte";
-    import CardButton from "./CardButton.svelte";
-    import Statistics from "./Statistics.svelte";
+    import Temperature from "../charts/Chart.svelte";
+    import CardButton from "../CardButton.svelte";
+    import Statistics from "../Statistics.svelte";
+
+    export let type = "type";
+    export let unit = "unit";
 </script>
 
 <div class="card">
-    <h2>Temperature</h2>
+    <h2>{type}</h2>
     <div class="buttons">
         <CardButton>Day</CardButton>
         <CardButton>Week</CardButton>
@@ -15,9 +18,9 @@
         <Temperature />
     </div>
     <div class="statistics">
-        <Statistics title="Average Temperature" number="18.0° C"/>
-        <Statistics title="Highest Recorded Temperature" number="4028.8° C"/>
-        <Statistics title="Lowest Recorded Temperature" number="-20.1° C"/>
+        <Statistics title="Average {type}" number="40{unit}"/>
+        <Statistics title="Highest Recorded {type}" number="86{unit}"/>
+        <Statistics title="Lowest Recorded {type}" number="13{unit}"/>
     </div>
 </div>
 
