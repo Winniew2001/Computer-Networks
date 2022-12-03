@@ -5,10 +5,10 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.mqtt.MqttServer;
 import io.vertx.mqtt.MqttServerOptions;
 import io.vertx.mqtt.MqttTopicSubscription;
+import io.vertx.mqtt.messages.MqttPublishMessage;
 import io.vertx.mqtt.messages.codes.MqttSubAckReasonCode;
 
 import java.nio.charset.Charset;
@@ -19,6 +19,7 @@ import java.util.List;
 public class MqttBroker {
     private Vertx vertx;
     private MqttServer mqttServer;
+    private MqttPublishMessage lastMessage;
 
     public final static MqttBroker instance = new MqttBroker();
 
@@ -65,6 +66,11 @@ public class MqttBroker {
                 for (MqttTopicSubscription s: mqttSubscribeMessage.topicSubscriptions()){
                     System.out.println("Subscription for " + s.topicName() + " with Qos" + s.qualityOfService());
                     reasonCodes.add(MqttSubAckReasonCode.qosGranted(s.qualityOfService()));
+                    mqttEndpoint.publish(lastMessage.topicName(),
+                            Buffer.buffer(lastMessage.payload().getByteBuf()),
+                            MqttQoS.AT_LEAST_ONCE,
+                            false,
+                            true);
                 }
                 mqttEndpoint.subscribeAcknowledge(mqttSubscribeMessage.messageId(), reasonCodes, MqttProperties.NO_PROPERTIES);
             });
@@ -82,7 +88,7 @@ public class MqttBroker {
             //Publish handler
             mqttEndpoint.publishHandler(mqttPublishMessage -> {
                 System.out.println("Just received message [" + mqttPublishMessage.payload().toString(Charset.defaultCharset()) + "] with QoS [" + mqttPublishMessage.qosLevel() + "] at " + mqttPublishMessage.topicName());
-
+                this.lastMessage = mqttPublishMessage;
                 //Publish message to client
                 mqttEndpoint.publish(mqttPublishMessage.topicName(),
                         mqttPublishMessage.payload(),
@@ -98,8 +104,8 @@ public class MqttBroker {
             }).publishReleaseHandler(mqttEndpoint::publishComplete);
 
             //Publish message to client
-            mqttEndpoint.publish("aronshouse/sornesvaagen/kitchen/humidity/gr30/0",
-                    Buffer.buffer("H"),
+            mqttEndpoint.publish(lastMessage.topicName(),
+                    Buffer.buffer(lastMessage.payload().getByteBuf()),
                     MqttQoS.AT_LEAST_ONCE,
                     false,
                     true);
@@ -107,9 +113,7 @@ public class MqttBroker {
             //Specifing handlers for handling QoS 1 and 2
             mqttEndpoint.publishAcknowledgeHandler(mqttPublishMessageId -> {
                 System.out.println("Received ack for message = " + mqttPublishMessageId);
-            }).publishAcknowledgeHandler(mqttPublishMessageId ->{
-                mqttEndpoint.publishRelease(mqttPublishMessageId);
-            }).publishCompletionHandler(mqttPublishMessageId ->{
+            }).publishAcknowledgeHandler(mqttEndpoint::publishRelease).publishCompletionHandler(mqttPublishMessageId ->{
                 System.out.println("Received ack for message = " + mqttPublishMessageId);
             });
 

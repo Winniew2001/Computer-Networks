@@ -10,8 +10,8 @@ import java.util.UUID;
  * Mqtt client responsible for interactions with the mqtt broker.
  */
 public class MqttCli {
-    private final static String TRANSPORT_PROTOCOL = "tcp";
-    private final static String HOST_ADDRESS = "129.241.152.12";
+    private final static String TRANSPORT_PROTOCOL = "ws";
+    private final static String HOST_ADDRESS = "localhost";
     private final static String PORT_NUMBER = "1883";
     private final static String BASE_PATH = "aronshouse/sornesvaagen";
     private final static String GROUP = "group30";
@@ -63,7 +63,7 @@ public class MqttCli {
         String room = sensor.getLocation();
 
         MqttMessage message = new MqttMessage();
-        message.setQos(0);
+        message.setQos(1);
         message.setRetained(true);
         message.setPayload(payload);
 

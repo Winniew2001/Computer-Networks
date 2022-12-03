@@ -2,6 +2,7 @@
   "dependencies": {
     "chart.js": "^3.9.1",
     "fusioncharts": "^3.19.0",
+    "paho-mqtt": "^1.1.0",
     "svelte-fusioncharts": "^1.0.0"
   }
 }
