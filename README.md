@@ -20,8 +20,8 @@ financial loss should there be a need for repairs, as such we believe that many 
 monitor the environment of their house.  
 
 The following sections will be structured into different sections. Firstly, we will go over some of the [Theory and 
-technologies](#theory-and-technology) behind our solution, followed by our work process in [Methodlogy](# Methodology). 
-Then we present our [Results](#results), followed by a [Discussion](#discussion) around the outcome. Lastly, we will summarize our work in [Conclusion and future work](#conclision-and-future-work). 
+technologies](#theory-and-technology) behind our solution, followed by our work process in [Methodology](#methodology). 
+Then we present our [Results](#results), followed by a [Discussion](#discussion) around the outcome. Lastly, we will summarize our work in [Conclusion and future work](#concluision-and-future-work). 
 
 # Theory and technology
 
