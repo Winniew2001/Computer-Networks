@@ -47,6 +47,7 @@ public class App {
 
     private void sendDataToServer() {
         try {
+            mqttCli.publish(lastTemperatureReading, temperatureSensor);
             mqttCli.publish(lastHumidityReading, humiditySensor);
         } catch (Exception e) {
             System.out.println(e.toString());

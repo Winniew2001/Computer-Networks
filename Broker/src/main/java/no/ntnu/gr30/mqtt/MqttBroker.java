@@ -19,7 +19,8 @@ import java.util.List;
 public class MqttBroker {
     private Vertx vertx;
     private MqttServer mqttServer;
-    private MqttPublishMessage lastMessage;
+    private MqttPublishMessage lastTemperatureMessage;
+    private MqttPublishMessage lastHumidityMessage;
 
     public final static MqttBroker instance = new MqttBroker();
 
@@ -44,17 +45,21 @@ public class MqttBroker {
     private void prepareEndpointHandlers() {
         mqttServer.endpointHandler(mqttEndpoint -> {
 
-            System.out.println("MQTT client [" + mqttEndpoint.clientIdentifier() + "] request to connect, clean session = " + mqttEndpoint.isCleanSession());
+            System.out.println("MQTT client [" + mqttEndpoint.clientIdentifier() + "]" +
+                    " request to connect, clean session = " + mqttEndpoint.isCleanSession());
 
             if (mqttEndpoint.auth() != null) {
-                System.out.println("[username =" + mqttEndpoint.auth().getUsername() + ", password =" + mqttEndpoint.auth().getPassword() + "]");
+                System.out.println("[username =" + mqttEndpoint.auth().getUsername() +
+                        ", password =" + mqttEndpoint.auth().getPassword() + "]");
             }
             System.out.println(Arrays.toString(mqttEndpoint.will().getWillMessageBytes()));
             System.out.println("[properties = " + mqttEndpoint.connectProperties() + "]");
             if (mqttEndpoint.will() != null) {
                 System.out.println("[will topic = " + mqttEndpoint.will().getWillTopic() + " msg = " +
-                        (mqttEndpoint.will().getWillMessageBytes() != null ? new String(mqttEndpoint.will().getWillMessageBytes()) : "") +
-                        " QoS = " + mqttEndpoint.will().getWillQos() + " isRetain = " + mqttEndpoint.will().isWillRetain() + "]");
+                        (mqttEndpoint.will().getWillMessageBytes() != null
+                                ? new String(mqttEndpoint.will().getWillMessageBytes()) : "") +
+                        " QoS = " + mqttEndpoint.will().getWillQos() + " isRetain = "
+                        + mqttEndpoint.will().isWillRetain() + "]");
             }
 
             System.out.println("[keep alive timeout = " + mqttEndpoint.keepAliveTimeSeconds() + "]");
@@ -66,13 +71,28 @@ public class MqttBroker {
                 for (MqttTopicSubscription s: mqttSubscribeMessage.topicSubscriptions()){
                     System.out.println("Subscription for " + s.topicName() + " with Qos" + s.qualityOfService());
                     reasonCodes.add(MqttSubAckReasonCode.qosGranted(s.qualityOfService()));
-                    mqttEndpoint.publish(lastMessage.topicName(),
-                            Buffer.buffer(lastMessage.payload().getByteBuf()),
-                            MqttQoS.AT_LEAST_ONCE,
-                            false,
-                            true);
+
+                    if (s.topicName().contains("temperature")){
+                        if (lastTemperatureMessage != null) {
+                            mqttEndpoint.publish(lastTemperatureMessage.topicName(),
+                                    Buffer.buffer(lastTemperatureMessage.payload().getByteBuf()),
+                                    MqttQoS.AT_LEAST_ONCE,
+                                    false,
+                                    true);
+                        }
+                    }
+                    if (s.topicName().contains("humidity")){
+                        if (lastHumidityMessage != null) {
+                            mqttEndpoint.publish(lastHumidityMessage.topicName(),
+                                    Buffer.buffer(lastHumidityMessage.payload().getByteBuf()),
+                                    MqttQoS.AT_LEAST_ONCE,
+                                    false,
+                                    true);
+                        }
+                    }
                 }
-                mqttEndpoint.subscribeAcknowledge(mqttSubscribeMessage.messageId(), reasonCodes, MqttProperties.NO_PROPERTIES);
+                mqttEndpoint.subscribeAcknowledge(mqttSubscribeMessage.messageId(),
+                        reasonCodes, MqttProperties.NO_PROPERTIES);
             });
 
             //Unsubscribe handler
@@ -87,8 +107,17 @@ public class MqttBroker {
 
             //Publish handler
             mqttEndpoint.publishHandler(mqttPublishMessage -> {
-                System.out.println("Just received message [" + mqttPublishMessage.payload().toString(Charset.defaultCharset()) + "] with QoS [" + mqttPublishMessage.qosLevel() + "] at " + mqttPublishMessage.topicName());
-                this.lastMessage = mqttPublishMessage;
+                System.out.println("Just received message [" +
+                        mqttPublishMessage.payload().toString(Charset.defaultCharset()) + "] with QoS [" +
+                        mqttPublishMessage.qosLevel() + "] at " + mqttPublishMessage.topicName());
+
+                if (mqttPublishMessage.topicName().contains("temperature")) {
+                    this.lastTemperatureMessage = mqttPublishMessage;
+                }
+                if (mqttPublishMessage.topicName().contains("humidity")) {
+                    this.lastHumidityMessage = mqttPublishMessage;
+                }
+
                 //Publish message to client
                 mqttEndpoint.publish(mqttPublishMessage.topicName(),
                         mqttPublishMessage.payload(),
@@ -102,13 +131,6 @@ public class MqttBroker {
                     mqttEndpoint.publishReceived(mqttPublishMessage.messageId());
                 }
             }).publishReleaseHandler(mqttEndpoint::publishComplete);
-
-            //Publish message to client
-            mqttEndpoint.publish(lastMessage.topicName(),
-                    Buffer.buffer(lastMessage.payload().getByteBuf()),
-                    MqttQoS.AT_LEAST_ONCE,
-                    false,
-                    true);
 
             //Specifing handlers for handling QoS 1 and 2
             mqttEndpoint.publishAcknowledgeHandler(mqttPublishMessageId -> {
@@ -143,8 +165,6 @@ public class MqttBroker {
 
     public void closeServer() {
         //Closing the server
-        this.mqttServer.close(v -> {
-            System.out.println("MQTT server closed");
-        });
+        this.mqttServer.close(v -> System.out.println("MQTT server closed"));
     }
 }

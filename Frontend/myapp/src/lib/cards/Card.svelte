@@ -1,26 +1,24 @@
 <script>
-    import Temperature from "../charts/Chart.svelte";
-    import CardButton from "../CardButton.svelte";
+    import Chart from "../charts/Chart.svelte";
     import Statistics from "../Statistics.svelte";
 
+    export let config;
+
+    export let title = "title";
     export let type = "type";
     export let unit = "unit";
+    export let isTemp = true;
+    export let isDewPoint = false;
+    export let isMulti = false;
 </script>
 
 <div class="card">
-    <h2>{type}</h2>
-    <div class="buttons">
-        <CardButton>Day</CardButton>
-        <CardButton>Week</CardButton>
-        <CardButton>Month</CardButton>
-    </div>
+    <h2>{title}</h2>
     <div class="graph-container">
-        <Temperature />
+        <Chart chartConfig = "{config}" isTemp = {isTemp} isMulti = {isMulti} isDewPoint = {isDewPoint}/>
     </div>
     <div class="statistics">
-        <Statistics title="Average {type}" number="40{unit}"/>
-        <Statistics title="Highest Recorded {type}" number="86{unit}"/>
-        <Statistics title="Lowest Recorded {type}" number="13{unit}"/>
+        <Statistics title="{type}" number="{unit}"/>
     </div>
 </div>
 
@@ -37,10 +35,5 @@
     .statistics{
         display: flex;
         justify-content: space-evenly;
-    }
-
-    .buttons{
-        display: flex;
-        justify-content: flex-end;
     }
 </style>
