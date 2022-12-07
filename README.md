@@ -1,172 +1,130 @@
-# Report template
+# [Home monitoring for temperature and humidity for mold]
 
-This document provides a template for the project report in IDATA2304. The
-structure follows the same principles used in other reports (including bachelor
-projects).
-
-If you use this file as a template, **remember to delete all the "dummy texts"**
-.
-Your report must look like a proper engineer's report, not like a filled-in
-online form! A general tip - write the report like a story explaining your
-reasoning and the result. Also - the report is not about YOU, it is about the
-WORK you have done. So don't write a "letter to my mom" complaining how hard you
-have struggled with configuring MQTT and a laptop crash. As harsh as this may
-sound, this is a report for peer engineers who are interested in the work and in
-the professional result, not in emotions of individuals.
-
-The rest of the text is a template that you can use for the report.
-
-If you are new to Markdown syntax (the suggested way for writing the report),
-there are plenty of documentation sites and tutorials online, for
-example, [Basic
-Syntax article](https://www.markdownguide.org/basic-syntax/) in the Markdown
-Guide.
-
-# [Title of your project here]
-
-Here you can mention that this is a school project in the course IDATA2304
-Computer networks. Not mandatory, but could be useful for readers other than the
-teachers.
+This is a project related to our course IDATA2304 Computer networks. 
 
 ## Abstract
 
-This is the shortest version of your project's description. Think of a busy
-person who has 1 minute to get familiar with what this is about. The abstract
-should be short but descriptive.
-Suggested content in the abstract:
-
-* Describe the background and importance of the situation, 1-2 sentences
-* Describe a problem, 1-2 sentences
-* Describe your proposed solution, 1-3 sentences
-* Describe the results you have achieved, 1-3 sentences
-* Describe the experiments or evaluation you have done
-* Conclusions and possible future work
-
-Here is an example abstract of an imaginary project:
-Modern urban lifestyle has high demands on the individuals. We have busy
-schedules and need to remember many things. One of the most irritating things in
-a hectic morning is the inability to find your keys or wallet. In this
-project we propose a novel solution for tracking of daily-life objects, such as
-your wallet or keychain. Users attach smart chips with Bluetooth communication
-to each important asset they want to track. This gives the ability to use a
-smartphone to locate the missing item. We have created a prototype system,
-described in this report. We have performed a user study with 20 participants
-who were given the task to locate a wallet inside a living room.
-The results show that our solution helps the users to locate their items within
-2 minutes the first time, and within 45 seconds when they are using the app
-repeatedly. Possible future research directions include design of a robust and
-lightweight RFID tag, and possibilities to locate ones items using a mobile
-phone of a family member.
-
-Note: in your project you may not have user tests. Describe the analysis and
-evaluation you have had.
+The environment around us directly impacts our health. High humidity and temperatures in houses can have adverse effects on 
+one’s health but also the house itself. When the humidity and temperatures are high, it could create the perfect 
+environment for mold to thrive. With modern technology, we can monitor these factors that are often overlooked. Our 
+solution is a clean and minimalistic informational web view of graphs describing a home environment.  
 
 ## Introduction
 
-Here you introduce your project in more detail. Include the following:
+Our proposed solution is primarily targeted towards private homes, since people generally spend a good portion of day-to-
+day life at home, but also value the condition of the house. 
 
-* Introduction of the context, the domain. Where will your solution work? Is
-  this the maritime domain, finance, private homes?
-* Introduction of the problem. What is problematic in this environment? What
-  will you solve? Why is this relevant?
-* Short introduction in the rest of the report, preferably with links to the
-  other chapters. For example, "We propose an Internet-of-Things system using
-  temperature and humidity sensors. First we describe the used
-  protocols, ["theory and technology"]. Then we describe our work process
-  in ["Methodology"]. Then the obtained [results] are presented, followed by
-  [reflection and discussion of possible improvements]." Note: don't copy this
-  text, write your own!
+For many, the environmental details of their living space tend to go unnoticed. While changes in temperature easily be felt 
+by the human body, the level of humidity can be far more difficult to detect. Damage to a private home can also lead to 
+financial loss should there be a need for repairs, as such we believe that many home-owners would like an easy way to 
+monitor the environment of their house.  
 
-## Theory and technology
+The following sections will be structured into different sections. Firstly, we will go over some of the [Theory and 
+technologies](#theory-and-technology) behind our solution, followed by our work process in [Methodlogy](# Methodology). 
+Then we present our [Results](#results), followed by a [Discussion](#discussion) around the outcome. Lastly, we will summarize our work in [Conclusion and future work](#conclision-and-future-work). 
 
-Here you write about the "things" you have used in your project. At the same
-time these are things that another person must know about to be able to
-understand your project.  
-Some principles to follow:
+# Theory and technology
 
-* Write about all the relevant theory, technologies and protocols that your
-  project builds upon. For example, if you transfer data in JSON format using
-  the HTTP protocol, you should mention this and other protocols that it depends
-  on:
-    * HTTP
-    * JSON
-    * TCP
-    * IP
-    * Ethernet or wireless protocols you have used (is it 802.11x or something
-      else?)
-* Remember to mention the "why" - how is this "thing" you write about relevant
-  to your project? What does this protocol provide for your project? For
-  example, if you mention TCP - how is it important for your project? What if
-  you took away TCP, what would happen? What does TCP ensure for you?
-* Assume that the reader is your peer student - a computer science bachelor
-  student, midway through the study. Someone taking this course next year should
-  be able to read your report and understand it.
-* Don't go too deep. For example, you don't need to explain a lot of detail of
-  object-oriented programming. Every computer science student should know what
-  it is.
-* Prefer short description of many protocols instead of deep description of few
-  protocols.
-* Are there any specific aspects which are relevant for your project? If not,
-  don't describe those. For example, students sometimes spend several pages
-  describing the different methods (GET, POST, PUT) of HTTP protocol. Is that
-  important for your project? Do you use all these methods? If not, don't write
-  about these.
-* Is there any domain-knowledge the reader should know to understand the
-  project? For example, if you are monitoring temperature in a greenhouse, what
-  is known about it? Is the optimal temperature +20..30C, or is it -10..0C?
-* At the same time, remember that the focus of the course is computer networks
-  and networking protocols. Therefore, use more time describing
-  networking-related concepts.
-* Describe the theory and techniques have you used for data simulation,
-  processing and visualization?
-* What connection to your other subjects does this project have? Does it use any
-  methods learned from the IDATA2302 Algorithms and data structures? Maybe
-  something from IDATA2303 Data modelling and databases? Or maybe you apply some
-  statistical methods from ISTA1003 Statistics?
+Our main goal for this project is to send data from a client to a server, then receive this data in another client. We 
+first used MQTT over TCP to connect to the public broker, but eventually we switched over to WebSocket as that is what is 
+supported in web browsers. So, we implemented socket connections between the client simulating data and our MQTT broker, as 
+well as between the MQTT broker and our Svelte/JavaScript web application. 
+
+MQTT is a lightweight machine to machine communication protocol based on TCP, now it also has socket support. TCP is a 
+protocol for reliable data transfer, and IP is an addressing protocol. Sockets are used as a bi-directional communication 
+channel that stays open until you close it. Lastly, we used some HTTP web protocol for our live development server when 
+making our front-end application 
+
+MQQT using WebSocket's was our primary choice due to how cleanly it implements extended communications, and as we are 
+sending/receiving data around twice every second per application it made sense for us. 
+
+Since we are interested in helping homeowners monitor the temperature and humidity in their houses, it becomes important to 
+understand the conditions in which mold thrive best.  
+
+Humidity and dew point are both measurements of the amount of water in the air. The difference is that dew point is defined 
+as the lowest temperature at which dewdrops will start forming, based on how much water vapor is currently in the air. Once 
+the temperature becomes relatively close to the dewpoint, dew will start forming. 
+
+Mold is most comfortable at the same temperature as we prefer, which is usually around 20 C°. This makes it for us to 
+prevent mold in the aspect of changing the temperature, but what we can do is prevent the humidity levels from becoming too 
+high. Since mold thrives best in environments that are damp and humid, it becomes important to prevent condensation from 
+forming inside the house. It is said that the ideal humidity range of humidity levels indoors lies between 30-50%. We used 
+a formula to calculate the dew point given temperature and humidity, this can be found on the wikipedia page about dew 
+point under simple approximations. 
+
+When simulating the data, we wanted to make sure it would seem realistic. This means that the temperature or humidity could 
+not suddenly jump from a very high number to a very low number, but instead slowly incrementally build upwards or 
+downwards. 
+
+Since our data would be temperature, humidity and dew point, we decided to use a JavaScript library called Chart.js for the 
+visualization of our data.  
+
+This project is connected to the subject Web technologies we have both previously had, from learning how to write markup, 
+style with css, and allowing interactive web pages with JavaScript. 
 
 # Methodology
 
-Here you can write about the way you have worked. You don't need to write much
-about how you organized sprints, this documentation will be handled separately.
-Again - think about the next engineer-reader. What does the engineer need to
-know about the way you worked? Did you do some user tests? Experiments? How did
-you measure, evaluate? Any best-practices you followed? What must the reader
-understand to be able to interpret the results properly?
+The first step to solving a problem was finding a problem to solve. We had concluded that the data we wanted to simulate 
+was temperature and humidity. With this in mind, we looked for a problem related to these factors. The first problem we 
+evaluated was the correlation between humidity, temperature and skin problems. After researching around that topic, we 
+concluded that the topic was out of our scope, due to the lack of credible research.  
+
+The second topic we investigated was mold growth in homes. Having heard of mold infections in the past, and knowing this is 
+a real problem, we decided to look into this more. Finding more substantial information about this, we decided to proceed 
+with this topic.  
+
+Our first goal was to create dummy sensors that would simulate temperature data and humidity data. In order to see what was 
+being simulated, we printed out the result of the simulation in the terminal of the idea. After this was finished, we made 
+a client in Java that would connect to the MQTT broker provided, and check if our data was being sent also using the 
+terminal and prints.  
+
+Once we knew that the client was properly sending data to the broker, our next goal was to start visualizing the data we 
+would get. As we had previously worked with web technologies and made a website, we decided that we wanted to make one for 
+this project, utilizing the chart.js charting library for creating the graphs we needed. As a first step to learning about 
+graphs, we decided to make static line graphs, before proceeding further with the project. When coding for this website, we 
+tried to make components that would be reusable, but this was not always possible. 
+
+The next big goal was to create our own MQTT broker but in Java. We utilized an API called Vert.x, which provides a server 
+that can handle connections, communications and message exchange with remote MQTT clients. This is an imitation of a real 
+MQTT broker. Once this was finished, we then had to make sure that data sent from the Java client would go through the 
+broker, then to the website. The API would tell us if we had successfully received data from our client. We had some issues 
+between sending data from the broker up towards the WebSocket. Since our broker was not a true MQTT broker we had to 
+manually request the data every time we wanted it, we did this by simply re-subscribing to the topic every time we wanted 
+it, almost resembling a rest API. For displaying the data, we used the charts.js library to make line-graphs since they are 
+well suited for displaying changes over time. For the dew point graph, we also needed to process the temperature and 
+humidity with a mathematical formula to get the dew point values to display. Additionally, we made a class for holding 
+graph configurations in order to clean up the code. 
 
 # Results
 
-Here you describe the results you have obtained. Some considerations:
+![dasdasdasdas](https://user-images.githubusercontent.com/77609835/206168845-cb298392-0313-4cf2-967d-3b45c47c562e.png)
+We ended up with a web application for displaying the data we collected along with one processed form of it. This web 
+application communicates with an imitation MQQT broker that sends it the data it last received from its client that is 
+providing it with simulated data. This client we made is a small application sending numbers that are generated within a 
+range to the MQQT broker. These numbers are supposed to represent possible values a sensor could have generated. 
 
-* Have a top-down approach. Start with a short introduction, then go more into
-  details. For example, a good way to start the section could be with a picture
-  showing the overall architecture of the solution and a short text describing
-  it. After that you can go into more details on each component of the system.
-* Describe the structure you got, the general principles of how it works.
-* You could also include some screenshots showing the system. How could the
-  reader get an impression of the result without running the system?
-* No need to include code in the report, all the code is in the repository.
+![fdgftgfdgfd](https://user-images.githubusercontent.com/77609835/206168882-2eb0810f-b411-4feb-97ae-7bca2a7933e4.PNG)
+The blue rectangle represents the java application sending data to the broker, the broker being the rounded rectangle that 
+sends the data to the web application, the purple circle when the web application requests it. 
 
 # Discussion
 
-Here you can reflect on the result. What is working well? What is not working
-well and why?
+While sprints were good goals, in the end we don’t think that they are a good representation of our workflow, especially 
+because our project was always changing under development and priorities re-ordered. Overall, we are not the happiest with 
+the result as it was rather rushed and squeezed in-between other projects. 
+
+As for what we liked about the project, the graphs we made, the mock MQTT server and code structure in general were high 
+during most of the project. 
 
 # Conclusion and future work
 
-Here you summarize the work shortly, the status. Also, here you identify the
-potential work in the future. Note: think in general - how could this work be
-continued (by your group or by others)?
+Overall, we managed to create a web page that displays data regarding the temperature, humidity and dew point from data 
+created by dummy sensors over a MQTT broker. We managed to reach a completed project, but some lower code quality was 
+introduced towards the end, and we could probably have commented more.  
+
+Possible future work would be to implement a notification system, make the applications more informative and make expanding 
+upon the existing codebase easier. Lastly, time management is always a skill that needs improving. 
+
 
 # References
-
-Here you provide sources of information. In a written report you typically
-include list of references in the end and have only links to those in the text,
-such as [1], [2], [3]. In markdown (as this document will be) you can include
-most of the links directly in the text. Here in this section you should list the
-sources of information you have used - books, articles, Wikipedia articles,
-other online articles. For each of them you should specify at least the title,
-the author. If available: web link and year when this was published.
-
-Note: YouTube videos are not a good source for information... Some of them are
-very good, but in general YouTube is a large trash bin, where some things turn
-out to be "edible".
+https://en.wikipedia.org/wiki/Dew_point (Last edited on 6th of December 2022) 
